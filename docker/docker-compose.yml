@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+    minfi:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            # set arguments from global .env file
+            args:
+                maintainer: $maintainer
+        ports:
+            - ${service_port}:8080
+        networks:
+            - minfi
+        volumes:
+            - ${fin_data_dir}:/data/minfi
+        # tag the image
+        image: minfi/webapp:1.0
+        container_name: min_fi_webapp
+# connect to container network
+networks:
+    minfi:
+        name: minfi
