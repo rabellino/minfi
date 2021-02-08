@@ -21,15 +21,17 @@ RUN echo "**** install Python ****" && \
 
 LABEL version="1.0"
 
-COPY ./docker/requirements.txt requirements.txt 
+COPY ./docker/requirements.txt .
 RUN pip install -r requirements.txt
 
 # specify a volume for storage within the container
-VOLUME [ "/data/minfi" ]
+#VOLUME [ "/data/minfi" ]
 
 WORKDIR /src
 
 COPY ./src/service.py /src/
 COPY ./config/server.conf /config/
+
+COPY index.html /src/
 
 ENTRYPOINT ["python3", "service.py"]

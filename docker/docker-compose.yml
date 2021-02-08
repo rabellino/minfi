@@ -2,8 +2,8 @@ version: '3.7'
 services:
     minfi:
         build:
-            context: .
-            dockerfile: Dockerfile
+            context: ../
+            dockerfile: ./docker/Dockerfile
             # set arguments from global .env file
             args:
                 maintainer: $maintainer
@@ -12,7 +12,7 @@ services:
         networks:
             - minfi
         volumes:
-            - ${fin_data_dir}:/data/minfi
+            - ${dev_repo_dir}:/webapp # map local development directory to prevent having to rebuild image for changes
         # tag the image
         image: minfi/webapp:1.0
         container_name: min_fi_webapp

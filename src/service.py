@@ -13,15 +13,8 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 class MinFi(object):
     
     @cherrypy.expose
-    def random(self):
-        logging.debug('entering service#random')
-        response_obj = {}
-
-        try:
-            pass
-        except Exception as e:
-            logging.error('error placeholder')
-        
-        return response_obj
+    def index(self):
+        logging.debug('entering service#index')
+        return open('index.html')
 
 cherrypy.quickstart(MinFi(), '/', "/config/server.conf")
