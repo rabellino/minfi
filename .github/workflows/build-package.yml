@@ -1,0 +1,26 @@
+name: Build and package services to ghcr.io
+
+on:
+  push:
+    branches: [ main ]
+    env:
+      DEV_REGISTRY: ghcr.io/rabellino/minfi
+
+jobs:
+  job1:
+    name: Client
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        app:
+          - ui
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secretes.GITHUB_TOKEN }}
+      - name: Checkout UI Code
+        uses: actions/checkout@v3
