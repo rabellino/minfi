@@ -1,3 +1,88 @@
 .card {
     max-width: 1280px;
-}
+    margin: 0 auto;
+    padding: 2rem;
+    align-items: center;
+    width: inherit;
+    height: 100%;
+    flex-direction: column;
+   }
+   
+   
+   .logo {
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
+   }
+   .logo:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+   }
+   .logo.react:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa);
+   }
+   
+   
+   @keyframes logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+   }
+   
+   
+   @media (prefers-reduced-motion: no-preference) {
+    a:nth-of-type(2) .logo {
+      animation: logo-spin infinite 20s linear;
+    }
+   }
+   
+   
+   .layoutButton {
+    position: relative;
+    font-size: 20px;
+    padding: 10px;
+    margin: 10px 0;
+    max-width: fit-content;
+   }
+   
+   
+   .layoutButton::before {
+    content: '';
+    position: absolute;
+    border-left: 3px solid var(--chakra-colors-blue-50);
+    left: calc(20% + 4px);
+   }
+   
+   
+   .layoutButton.top::before {
+    height: 50%;
+    top: 50%;
+   }
+   
+   
+   .layoutButton.middle::before {
+    height: 100%;
+    top: 0;
+   }
+   
+   
+   .layoutButton.bottom::before {
+    height: 50%;
+    top: 0;
+   }
+   
+   
+   .layoutButton::after {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    transform: translateY(-50%);
+    content: '';
+    /* background: var(--chakra-colors-blue-50); */
+    width: 11px;
+    height: 11px;
+    border-radius: 100%;
+   }   

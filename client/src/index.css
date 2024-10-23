@@ -1,4 +1,125 @@
 body.chakra-ui-dark {
     --main-body-bg: var(--base-gradient);
+    /* --main-body-bg: linear-gradient(90deg, #2d416f, #0e182b); */
+    /* --main-navbar-bg: linear-gradient(90deg, #11396e 0%, #4076bf 50%, #2477a8 100%); */
     --main-navbar-bg: #243458;
-}
+    --main-side-nav-bg: #859ab6;
+    --main-card-bg: rgba(0, 0, 0, 0.16);
+    --main-card-border: 1px solid rgba(255, 255, 255, 0.24);
+    --main-card-border-radius: 12px;
+    --main-footer-bg: #111a2b;
+    --base-gradient: linear-gradient(90deg, #11396E 0%, #A7BBE2 100%);
+   
+   
+   }
+   
+   
+   .gradient-text {
+    background-color: var(--chakra-colors-gray-400);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+   }
+   
+   
+   .display-element {
+    height: 100%;
+    width: 100%;
+    padding: 1rem;
+    background: var(--main-card-bg);
+    border-radius: var(--main-card-border-radius);
+    border: var(--main-card-border);
+   }
+   
+   
+   .capital-first-word:first-letter {
+    text-transform: capitalize;
+   }
+   
+   
+   .nav-group {
+    display: flex;
+   }
+   
+   
+   .gutter {
+    width: 0.5rem;
+   }
+   
+   
+   .nav-btn-group {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: start;
+    gap: 16px;
+   }
+   
+   
+   .nav-group-title {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+   }
+   
+   
+   .layoutButton {
+    position: relative;
+    font-size: 20px;
+    padding: 10px;
+   }
+   
+   
+   .layoutButton::before {
+    content: '';
+    position: absolute;
+    border-left: 3px solid var(--chakra-colors-blue-50);
+    left: calc(20% + 4px);
+   }
+   
+   
+   .layoutButton.top::before {
+    height: 50%;
+    top: 50%;
+   }
+   
+   
+   .layoutButton.middle::before {
+    height: 100%;
+    top: 0;
+   }
+   
+   
+   .layoutButton.bottom::before {
+    height: 50%;
+    top: 0;
+   }
+   
+   
+   .layoutButton::after {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    transform: translateY(-50%);
+    content: '';
+    background: var(--chakra-colors-blue-50);
+    width: 11px;
+    height: 11px;
+    border-radius: 100%;
+   }
+   
+   
+   /*
+   .dsd-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0 24px;
+    gap: 8px;
+    background: #3182CEFF;
+    border-radius: 6px;
+   }
+   */   

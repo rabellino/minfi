@@ -1,6 +1,13 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Flex, Heading, Image, Text } from '@chakra-ui/react';
 
 function Body() {
-    const { windows } = useSelector((state) => state.windowStates);
+  return (
+    <Flex flexGrow="1" position="relative">
+      <Text>minfi</Text>
+    </Flex>
+ );
 }
+
+export default Body;
