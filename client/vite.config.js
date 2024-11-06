@@ -9,10 +9,19 @@ export default defineConfig({
   plugins: [
     basicSsl(),
     react(),
-    svgr()
+    svgr({ include: '**/*.svg' }) // needed to in-line svg files
   ],
   server: {
     host: true,
-    port: 443
+    port: 443,
+    proxy: {
+      '/api': {
+        // point fetch calls to /api to gateway service
+        target: 'http://127.0.0.1:8080/api'
+      }
+    }
+  },
+  build: {
+    manifest: true
   }
 });
