@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minfi-dev-deployment
+  labels:
+    app: minfi
+  namespace: minfi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minfi
+  template:
+    metadata:
+      labels:
+        app: minfi
+    spec:
+      #nodeSelector:
+      #  kubernetes.io/hostname: ip-000-000-000-000.us-east-2.compute.internal
+      containers:
+      - name: minfi
+        image: ghcr.io/rabellino/minfi:dev
+        imagePullPolicy: Always
+        args: [
+          "--couch_username=$(couch_username)",
+          "--couch_password=$(couch_password)"
+        ]
+        env:
+        - name: couch_username
+          valueFrom:
+            # set by: kubectl create secret generic couch-username-secret
+            #           -n minfi --from-literal=username=<USERNAME HERE>
+            secretKeyRef:
+              name: couch-username-secret
+              key: username
+        - name: couch_password
+          valueFrom:
+            # set by: kubectl create secret generic couch-password-secret
+            #           -n minfi --from-literal=password=<PASSWORD HERE>
+            secretKeyRef:
+              name: couch-password-secret
+              key: password
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 125m
+          limits:
+            memory: 1024Mi
+            cpu: 1000m
+        ports:
+          - containerPort: 443
+            name: ui
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-io-dockerconfig
