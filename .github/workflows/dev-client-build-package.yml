@@ -3,18 +3,18 @@ name: Dev Env - Build and package services to ghcr.io
 on:
   push:
     branches: [ dev ]
-    env:
-      DEV_REGISTRY: ghcr.io/rabellino/minfi
 
 jobs:
   minfi:
     name: Build and Package
     runs-on: ubuntu-latest
+    env:
+      DEV_REGISTRY: ghcr.io/rabellino/minfi
     strategy:
       fail-fast: true
       matrix:
         app:
-          - ui
+          - minfi
     steps:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
