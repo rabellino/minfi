@@ -90,7 +90,7 @@ jobs:
             --build-arg COMMITBRANCH=${{ env.BRANCH }} \
             --build-arg COMMITSHA=${{ github.sha }} \
             -t ${{ env.DEV_REGISTRY }}/${{ env.APP_LOWERCASE }}:${{ env.GIT_TAG }} \
-            -f ./docker/client/dev/Dockerfile
+            -f ./docker/dev/Dockerfile
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master

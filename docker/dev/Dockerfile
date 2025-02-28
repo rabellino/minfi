@@ -15,7 +15,7 @@ RUN npm install -D @vitejs/plugin-basic-ssl
 RUN npm run build
 
 # ------------------------------------------------------------------------------
-# Build the server
+# Build the application server
 FROM python:3.12-alpine as SERVER_BUILD
 
 RUN mkdir /server
@@ -26,8 +26,8 @@ COPY ./server/requirements.txt /server/requirements.txt
 RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip \
     pip install -r /server/requirements.txt
 
-# Set app arguments for Flask proxy / gateway API
-ENV PORT 443
+# Set app arguments for Flask API
+ENV PORT 5000
 ENV WORKERS 2
 ENV LOGLEVEL info
 
@@ -37,14 +37,10 @@ ENV STATIC_PATH "/server/static"
 
 EXPOSE $PORT
 
-# Copy certs to configure gunicorn to use SSL
-COPY ./docker/dev/server.crt /server/server.crt
-COPY ./docker/dev/server.key /server/server.key
-
 # Copy server assets
-COPY ./server/python/gateway/server.py /server.py
+COPY ./server/app.py /app.py
 
-# Create entry script to run service
+# Create entry script to run service using gunicorn
 RUN touch /server/entry.sh
 RUN echo "#!/bin/sh" > /server/entry.sh && \
  echo "gunicorn --chdir /server -w \${WORKERS}  \\" >> /server/entry.sh && \
