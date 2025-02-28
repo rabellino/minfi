@@ -9,6 +9,11 @@
 ## Developer Guide and Workflow
 
 ### Making code changes
+
+- main branch (the "prod" version)
+- dev branch (the development branch off main where frequent changes and improvements are made, may be in a broken state)
+    - branch of dev is a place to add new features, fix bugs, address tech debt, etc
+
 - git clone
 - create a new branch for bug / feat / debt / misc
 - Always pull before committing and pushing because...$ git pull
