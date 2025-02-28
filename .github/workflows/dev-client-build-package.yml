@@ -63,7 +63,7 @@ jobs:
         id: tag
         run: |
           # Get the current date-time in YYYYMMDDHHMMSS format
-          TIMESTAMP=$(date + "%Y%m%d%H%M%S")
+          TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           echo "Generated tag: $TIMESTAMP"
           # Store it as an output to use in later steps
           echo "GIT_TAG=$TIMESTAMP" >> $GITHUB_ENV
