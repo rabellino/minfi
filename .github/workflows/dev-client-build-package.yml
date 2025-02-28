@@ -96,7 +96,6 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: '${{ env.DEV_REGISTRY }}/${{ env.APP_LOWERCASE }}:${{ env.GIT_TAG }}'
-          format: 'table'
           ignore-unfixed: true
           vuln-type: 'os, library'
           severity: 'CRITICAL, HIGH'
