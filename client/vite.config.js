@@ -1,23 +1,24 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
-import basicSsl from '@vitejs/plugin-basic-ssl'
+//import basicSsl from '@vitejs/plugin-basic-ssl'
 
-// https://vite.dev/config/
+// define proxy to forward requests from the client to the Flask server
 export default defineConfig({
   base: '/',
   plugins: [
-    basicSsl(),
+    //basicSsl(),
     react(),
     svgr({ include: '**/*.svg' }) // needed to in-line svg files
   ],
   server: {
     host: true,
-    port: 443,
+    port: 5173,
     proxy: {
-      '/api': {
-        // point fetch calls to /api to gateway service
-        target: 'http://127.0.0.1:8080/api'
+      '/health': {
+        target: 'http://127.0.0.1:5000',
+        changeOrigin: true,
+        secure: false
       }
     }
   },
