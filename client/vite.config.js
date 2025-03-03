@@ -16,7 +16,6 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/health': {
-        // point calls to /health to proxy flask service running on this port
         target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false
