@@ -1,4 +1,4 @@
-name: Production Env - Build and package services to ghcr.io
+name: Prod Env - Build and package services to ghcr.io
 
 on:
   push:
