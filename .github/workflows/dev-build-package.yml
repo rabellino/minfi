@@ -14,7 +14,7 @@ jobs:
       fail-fast: true
       matrix:
         app:
-          - minfi
+          - dev
     steps:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
@@ -59,7 +59,7 @@ jobs:
         run: |
           echo "APP_LOWERCASE=${APP,,}" >> $GITHUB_ENV
 
-      - name: Generate immutable tag
+      - name: Generate immutable tag so ArgoCD recognizes a diff
         id: tag
         run: |
           # Get the current date-time in YYYYMMDDHHMMSS format
