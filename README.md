@@ -8,29 +8,36 @@ begins with this code repository and ends with an automated deployment of any
 code changes to a running AWS EKS cluster, all without the developers need for
 any interaction aside from pushing a code change.
 
-This workflow works as follows:
-1. placeholder
-2. placeholder
-3. placeholder
+This CI/CD workflow process is as follows:
+1. **GitHub**: Developer pushes a code change to the repository
+2. **GitHub Actions**: Relevant workflows are triggered to build, version, and 
+package a Docker image
+3. **ghcr.io**: The action will push relevant Docker images to the container 
+registry (ghcr.io) so it is made available to CD using Argo
+4. **ArgoCD**: running on AWS will see an update to container tags and pull the new
+image
+5. **EKS**: Kubernetes running on AWS will automatically restart with the new image
+containing the code pushed from Step 1.
 
 ## Repository Structure
-- `client`: 
-- `deployments`:
-- `docker`:
-- `server`:
+- `client`: ReactJS UI code
+- `deployments`: Kubernetes configurations for each runtime environment
+- `docker`: Contains Dockerfiles needed for deployment
+- `server`: Python 3 service backend the UI interacts with
 
 GitHub Branches:
 - `main`: the tested and deployed version
 - `dev`: branched from `main`, this is where frequent code changes and
 improvements are made, this branch may be in a broken state.
 
-## Required Resources
+## Required Resources and Software
 - This `GitHub` repository
 - Recommended editor: Microsoft VS Code
 - Python version 3.13+
 - Node version 22+
 - Docker version 26+
 - Amazon Web Services account for EKS deployment
+- ArgoCD
 
 ## Developer Guide and Workflow
 This section contains instructions on how developers can...
@@ -44,6 +51,7 @@ of small changes.
 $ git checkout dev
 $ git pull origin dev
 ```
+
 2. Use a descriptive branch name, adopot the following labels:
   - `feat/<short-name>`: a new feature to add to `dev`
   - `bug/<short-name>`: a bug fix to `dev`
@@ -54,6 +62,9 @@ Example:
 ```
 $ git checkout -b feat/add-new-env-config
 ```
+
+Alternatively, branches can be created from GitHub Projects / Issues via the GUI
+
 3. Keep changes small and focused. Make branches specific to a single feature or
 fix and avoid working on unrelated changes in the same branch.
 
@@ -68,7 +79,7 @@ $ git merge dev
 5. Add and commit your code changes to the branch:
 ```
 $ git add .
-$ git commit -m "Adding new configuration for dev env"
+$ git commit -m "adding new configuration for dev env"
 ```
 
 6. Push and create a Pull Request after committing changes:
@@ -83,9 +94,3 @@ reviews.
 git branch -d feat/add-new-env-config  # Delete local branch
 git push origin --delete feat/add-new-env-config  # Delete remote branch
 ```
-
-## TODO 
-- Intent is for this project to be an all-in-one and simple DevOps platform / portfolio
-- Set up CI / CD Pipelines
-- Create free tier AWS account to deploy to
-- Documentation of workflows and best practices (this document)
