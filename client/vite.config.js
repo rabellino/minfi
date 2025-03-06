@@ -13,7 +13,7 @@ export default defineConfig({
   ],
   server: {
     host: true,
-    port: 5173,
+    port: 5173, //443
     proxy: {
       '/health': {
         target: 'http://127.0.0.1:5000',
