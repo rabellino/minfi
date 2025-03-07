@@ -17,7 +17,7 @@ const HealthCheck = () => {
 
   return (
     <div>
-      <button onClick={checkHealth}>Check Health</button>
+      <button onClick={checkHealth}>Check API Health</button>
       <p>{status}</p>
     </div>
   );

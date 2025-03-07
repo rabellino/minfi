@@ -7,9 +7,6 @@ from http import HTTPStatus
 from flask import Flask, Response, request as current_request, current_app, send_from_directory
 from requests import request, RequestException
 
-def function_placeholder() -> str:
-    return 'placeholder'
-
 def to_iso(date_time: datetime) -> str:
     """Format a datetime instance to an ISO string"""
     return (f'{date_time.strftime("%Y-%m-%dT%H:%M")}:'
@@ -81,7 +78,7 @@ def forward_request(url: str,
 
 # Routes
 class StaticRoute:
-    """Simple router to serve static HTML/JS/CSS files"""
+    """Simple router to serve static HTML/JS/CSS files for client UI"""
     def handler(self, path: str = ''):
         """Handle request to /*, which is assumed to be browser/HTML request"""
         static_filepath = os.path.join(current_app.static_folder, path)
@@ -89,17 +86,18 @@ class StaticRoute:
             # request for a specific static file, such as CSS, JS, image asset
             return send_from_directory(current_app.static_folder, path)
 
-        # unrecognized path which may have been changed by React Router. Render static SPA
+        # unrecognized path which may have been changed by React Router.
+        # Render static SPA
         return send_from_directory(current_app.static_folder, 'index.html')
 
 
 class HealthRoute:
     """Router for /health endpoint"""
-    def __init__(self, epm_url: str, timeout: float | None = None):
+    def __init__(self, api_url: str, timeout: float | None = None):
         self._app_start_time: datetime = datetime.now(UTC)
         self._timeout = timeout
         self._apis = {
-            'epm': {'url': epm_url, 'health_path': '/uuids'},
+            'api': {'url': api_url, 'health_path': '/foo'}
         }
 
     def handler(self) -> Response:
@@ -126,78 +124,46 @@ class HealthRoute:
         return create_response(json.dumps(response_body))
 
 
-class EventPortfolioProxy:
-    """Router for Event Portfolio Manager endpoints"""
+class APIProxy:
+    """Router for External Service APIs endpoints"""
     def __init__(self, url: str, timeout: float | None = None):
         self._url = url
         self._timeout = timeout
 
-    def uuids(self) -> Response:
-        """Handle request to /uuids and forward request to Event Portfolio Manager"""
+    def foo(self) -> Response:
+        """Handle request to /foo and forward request to API Service"""
         params = str(current_request.query_string, encoding='utf-8')
         current_app.logger.info('Server received request: %s', current_request.url)
-        return forward_request(url=f'{self._url}/uuids?{params}',
+        return forward_request(url=f'{self._url}/foo?{params}',
                                method='GET',
                                headers=current_request.headers,
                                timeout=self._timeout)
-
-    def event_portfolios(self) -> Response:
-        """Handle request to /eventportfolios and forward request to Event Portfolio Manager"""
-        params = str(current_request.query_string, encoding='utf-8')
-        current_app.logger.info('Server received request: %s', current_request.url)
-        return forward_request(url=f'{self._url}/eventportfolios?{params}',
-                               method='GET',
-                               headers=current_request.headers,
-                               timeout=self._timeout)
-
-    def event_portfolio(self) -> Response:
-        """Handle request to /eventportfolio and forward request to Event Portfolio Manager"""
-        query_string = str(current_request.query_string, encoding='utf-8')
-        current_app.logger.info('Server received request: %s', current_request.url)
-        # CRUD method for requested event portfolio--GET to retrieve, DELETE to remove
-        method = current_request.method
-
-        return forward_request(url=f'{self._url}/eventportfolio?{query_string}',
-                               method=method,
-                               headers=current_request.headers,
-                               timeout=self._timeout)
-
 
 class AppWrapper:
     """Web server class wrapping Flask app operations"""
-    def __init__(self, epm_url: str, static_filepath: str | None = None):
+    def __init__(self, api_url: str, static_filepath: str | None = None):
         """Build web app instance, mapping handler to each endpoint"""
         self.app: Flask = Flask(__name__,
                                 static_folder=static_filepath,
                                 static_url_path='')
 
         # trim off any trailing slashes in upstream API URLs
-        epm_url = epm_url.rstrip('/')
+        api_url = api_url.rstrip('/')
 
         # set up proxy routes, configuring appropriate timeout for each endpoint
-        health_route = HealthRoute(epm_url, timeout=30)
-        event_port_proxy = EventPortfolioProxy(epm_url, timeout=30)
+        health_route = HealthRoute(api_url, timeout=30)
+        api_proxy = APIProxy(api_url, timeout=30)
 
-        # register endpoints (ITS config adds /idss-dev portion for us)
+        # register endpoints
         api_base = '/api'
         self.app.add_url_rule(f'{api_base}/health', 'health',
                               view_func=health_route.handler,
                               methods=['GET'])
-        self.app.add_url_rule(f'{api_base}/uuids', 'uuids',
-                              view_func=event_port_proxy.uuids,
+        self.app.add_url_rule(f'{api_base}/foo', 'foo',
+                              view_func=api_proxy.foo,
                               methods=['GET'])
-        self.app.add_url_rule(f'{api_base}/eventportfolios', 'eventportfolios',
-                              view_func=event_port_proxy.event_portfolios,
-                              methods=['GET'])
-        self.app.add_url_rule(f'{api_base}/eventportfolio', 'eventportfolio',
-                              view_func=event_port_proxy.event_portfolio,
-                              methods=['GET', 'DELETE'])
 
         if static_filepath:
-            # configure any non-API paths to serve static HTML/JS/CSS files, not send API calls
-            # these need to be '/', not '/idss-dev' because of how ITS has their
-            #       mapping configuration the /idss-dev portion of sites.gsl.noaa.gov/idss-dev
-            #       is handled on their end and points to / on our end
             static_route = StaticRoute()
             self.app.add_url_rule('/', 'root',
                                   view_func=static_route.handler,
@@ -212,7 +178,7 @@ class AppWrapper:
 
 def create_app(args: Namespace | None = None) -> Flask:
     """Entry point for the Flask web server to start"""
-    wrapper = AppWrapper(epm_url=args.gateway_epm_url,
+    wrapper = AppWrapper(api_url=args.gateway_api_url,
                          static_filepath=args.static_path)
     return wrapper.app
 
@@ -224,10 +190,10 @@ if __name__ == '__main__':  # pragma: no cover
                         default=8080, # chaged from 5000 due to potential port conflict with macos
                         type=int,
                         help='The port the DAS web server will listen on.')
-    parser.add_argument('--gateway_epm_url',
+    parser.add_argument('--gateway_api_url',
                         default='http://137.75.224.248:4001',
                         type=str,
-                        help='The URL where the Event Portfolio Manager is running')
+                        help='The URL where the external API Server is running')
     parser.add_argument('--static_path',
                         default=None,
                         type=str,
@@ -252,10 +218,10 @@ if __name__ == '__main__':  # pragma: no cover
 
 elif 'gunicorn' in os.getenv('SERVER_SOFTWARE', default=''):  # pragma: no cover
     # set up container runtime with gunicorn (which doesn't support ArgumentParser)
-    EPM = os.getenv('GATEWAY_EPM_URL', 'http://epwebservice:8080')
+    API = os.getenv('GATEWAY_API_URL', 'http://apiservice:8080')
     STATIC_PATH = os.getenv('STATIC_PATH', None)  # serve bundled frontend files, if given
 
-    app_wrapper = AppWrapper(epm_url=EPM, static_filepath=STATIC_PATH)
+    app_wrapper = AppWrapper(api_url=API, static_filepath=STATIC_PATH)
     app = app_wrapper.app
 
     app.logger.info('Created Flask app with static folder (%s): %s',
