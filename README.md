@@ -25,11 +25,6 @@ containing the code pushed from Step 1.
 - `docker`: Contains Dockerfiles needed for deployment
 - `server`: Python 3 service backend the UI interacts with
 
-GitHub Branches:
-- `main`: the tested and deployed version
-- `dev`: branched from `main`, this is where frequent code changes and
-improvements are made, this branch may be in a broken state.
-
 ## Required Resources and Software
 - This `GitHub` repository
 - Recommended editor: Microsoft VS Code
@@ -43,18 +38,18 @@ improvements are made, this branch may be in a broken state.
 This section contains instructions on how developers can...
 
 ### Development Workflow
-Use short-lived branches directly off of `dev` and encourage frequent merging
+Use short-lived branches directly off of `main` and encourage frequent merging
 of small changes.
 
-1. Always pull the latest `dev` changes.
+1. Always pull the latest `main` changes.
 ```
-$ git checkout dev
-$ git pull origin dev
+$ git checkout main
+$ git pull origin main
 ```
 
 2. Use a descriptive branch name, adopot the following labels:
-  - `feat/<short-name>`: a new feature to add to `dev`
-  - `bug/<short-name>`: a bug fix to `dev`
+  - `feat/<short-name>`: a new feature to add to `main`
+  - `bug/<short-name>`: a bug fix to `main`
   - `debt/<short-name>`: addresses technical debt
   - `misc/<short-name>`: anything that doesn't fit into the other labels
 
@@ -68,25 +63,25 @@ Alternatively, branches can be created from GitHub Projects / Issues via the GUI
 3. Keep changes small and focused. Make branches specific to a single feature or
 fix and avoid working on unrelated changes in the same branch.
 
-4. Regularly merge `dev` into your branch:
+4. Regularly merge `main` into your branch:
 ```
-$ git checkout dev
-$ git pull origin dev
+$ git checkout main
+$ git pull origin main
 $ git checkout feat/add-new-env-config
-$ git merge dev
+$ git merge main
 ```
 
 5. Add and commit your code changes to the branch:
 ```
 $ git add .
-$ git commit -m "adding new configuration for dev env"
+$ git commit -m "adding new configuration for prod env"
 ```
 
 6. Push and create a Pull Request after committing changes:
 ```
 $ git push origin feat/add-new-env-config
 ```
-Then, open a PR against dev on GitHub, add a clear description, and request
+Then, open a PR against main on GitHub, add a clear description, and request
 reviews.
 
 7. Delete merged branches once the PR has been merged:

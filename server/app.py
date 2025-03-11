@@ -191,9 +191,9 @@ if __name__ == '__main__':  # pragma: no cover
                         type=int,
                         help='The port the DAS web server will listen on.')
     parser.add_argument('--service_api_url',
-                        default='http://minfisvc:8080',
+                        default='http://localhost:8080',
                         type=str,
-                        help='The URL where the external API Server is running')
+                        help='The URL where the external Service API is running')
     parser.add_argument('--static_path',
                         default=None,
                         type=str,
