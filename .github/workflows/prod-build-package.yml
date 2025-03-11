@@ -70,7 +70,7 @@ jobs:
 
       - name: Update k8s dev deployments with immutable tag (for argoCD)
         if: ${{ github.ref == 'refs/heads/dev' }}
-        run: sed -i "s/wrapper:[^ ]\+/wrapper:${GIT_TAG}/g" ./deployments/dev/minfi.yml
+        run: sed -i "s/minfi:[^ ]\+/minfi:${GIT_TAG}/g" ./deployments/prod/minfi.yml
 
       - name: Commit & push changes to k8s dev deployment yml files
         if: ${{ github.ref == 'refs/heads/main' }}

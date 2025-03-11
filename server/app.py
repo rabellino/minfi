@@ -178,7 +178,7 @@ class AppWrapper:
 
 def create_app(args: Namespace | None = None) -> Flask:
     """Entry point for the Flask web server to start"""
-    wrapper = AppWrapper(api_url=args.gateway_api_url,
+    wrapper = AppWrapper(api_url=args.service_api_url,
                          static_filepath=args.static_path)
     return wrapper.app
 
@@ -190,8 +190,8 @@ if __name__ == '__main__':  # pragma: no cover
                         default=8080, # chaged from 5000 due to potential port conflict with macos
                         type=int,
                         help='The port the DAS web server will listen on.')
-    parser.add_argument('--gateway_api_url',
-                        default='http://137.75.224.248:4001',
+    parser.add_argument('--service_api_url',
+                        default='http://minfisvc:8080',
                         type=str,
                         help='The URL where the external API Server is running')
     parser.add_argument('--static_path',
@@ -218,7 +218,7 @@ if __name__ == '__main__':  # pragma: no cover
 
 elif 'gunicorn' in os.getenv('SERVER_SOFTWARE', default=''):  # pragma: no cover
     # set up container runtime with gunicorn (which doesn't support ArgumentParser)
-    API = os.getenv('GATEWAY_API_URL', 'http://apiservice:8080')
+    API = os.getenv('SERVICE_API_URL', 'http://minfisvc:8080')
     STATIC_PATH = os.getenv('STATIC_PATH', None)  # serve bundled frontend files, if given
 
     app_wrapper = AppWrapper(api_url=API, static_filepath=STATIC_PATH)
