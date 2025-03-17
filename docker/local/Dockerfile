@@ -8,9 +8,6 @@ WORKDIR /web
 COPY ./client/package.json ./client/package-lock.json /web/
 RUN npm install
 
-# Add SSL packages
-#RUN npm install -D @vitejs/plugin-basic-ssl
-
 # Copy client assets
 COPY ./client/index.html ./client/vite.config.js /web/
 COPY ./client/src /web/src/
@@ -26,13 +23,12 @@ RUN mkdir /server
 WORKDIR /server
 
 # Install all Python dependencies
-COPY ./server/requirements.txt /server/requirements.txt
+COPY ./docker/requirements.txt /server/requirements.txt
 RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip \
     pip install -r /server/requirements.txt
 
 # Set app arguments for Flask API
 ENV PORT 5173
-# ENV PORT 443
 
 ENV WORKERS 2
 ENV LOGLEVEL info
@@ -53,9 +49,6 @@ RUN echo "#!/bin/sh" > /server/entry.sh && \
  echo "   -b 0.0.0.0:\${PORT} --worker-tmp-dir /dev/shm \\" >> /server/entry.sh && \
  echo "   --enable-stdio-inheritance --access-logfile - --error-logfile - \\"  >> /server/entry.sh && \
  echo "   --access-logformat '%(h)s %(t)s \"%(r)s\" %(s)s %(b)s \"%(f)s\" \"%(a)s\" %(T)s %(M)s' \\"  >> /server/entry.sh && \
- # SSL certs
- #echo "   --keyfile=/server/server.key \\" >> /server/entry.sh && \
- #echo "   --certfile=/server/server.crt \\" >> /server/entry.sh && \
  echo "   --timeout 300 \\" >> /server/entry.sh && \
  echo "    --log-level \${LOGLEVEL} 'app:app' " >> /server/entry.sh && \
  chmod a+x /server/entry.sh

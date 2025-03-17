@@ -26,7 +26,7 @@ RUN mkdir /server
 WORKDIR /server
 
 # Install all Python dependencies
-COPY ./server/requirements.txt /server/requirements.txt
+COPY ./docker/requirements.txt /server/requirements.txt
 RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip \
     pip install -r /server/requirements.txt
 
