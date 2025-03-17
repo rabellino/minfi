@@ -89,5 +89,5 @@ To run locally:
 1. Create a container network for the images to run in with:
 `$ docker network create test`
 2. Build this image: `$ docker image build -t minfi:local -f ./docker/local/Dockerfile .`
-3. Run the UI / gateway service with: `$ docker run -it 5173:5173 --network test minfi:local`
+3. Run the UI / gateway service with: `$ docker run --rm -it -p 5173:5173 --network test minfi:local`
 4. Point browser at: https://localhost:5173
