@@ -1,16 +1,21 @@
 import { Flex } from "@chakra-ui/react";
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
 import "./App.css";
-import Body from "./components/layouts/Body";
-import Navbar from "./components/displayElements/nav/Navbar";
-import HealthCheck from "./components/displayElements/appComponents/HealthCheck";
+
+import TopNav from "./components/displayElements/nav/TopNav";
+import Home from "./components/layouts/Home";
 
 function App() {
     return (
-        <Flex direction="column" width="100%" minHeight="100vh">
-            <Navbar />
-            <Body />
-            <HealthCheck />
+        <Flex direction="column" position="relative" background="var(--main-body-bg)" overflowY="clip">
+            <TopNav />
+            <Routes>
+                <Route path="/" element={
+                    <Home />
+                }>
+                </Route>
+            </Routes>
         </Flex>
     );
 }
