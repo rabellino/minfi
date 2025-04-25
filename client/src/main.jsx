@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from "./App";
 import "./index.css";
 
-import theme from './assets/js/theme.js'
+import theme from './theme.js'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>

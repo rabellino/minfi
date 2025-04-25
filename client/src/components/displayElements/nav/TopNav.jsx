@@ -1,28 +1,48 @@
-import { Box, Flex, Heading, Image } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { Box, Flex, Link, Button, HStack, IconButton, useColorMode } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
+import { SunIcon, MoonIcon } from '@chakra-ui/icons';
+import { FaHome } from 'react-icons/fa';
 
-import logo from '../../../assets/img/logo.png';
+const TopNav = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
 
-function TopNav() {
   return (
-    <Flex
-      width="100%"
-      height="fit-content"
-      padding="0.5rem 2rem"
-      alignItems="flex-end"
-      justifyContent="space-between"
-      background="var(--main-navbar-bg)"
+    <Box 
+      as="nav" 
+      position="fixed" 
+      w="100%" 
+      p={4} 
+      bg={colorMode === 'light' ? 'gray.100' : 'gray.800'}
+      color={colorMode === 'light' ? 'gray.800' : 'white'}
+      borderBottom="1px"
+      borderColor={colorMode === 'light' ? 'gray.200' : 'gray.700'}
     >
-      <Flex gap="1rem" alignItems="center" width="100%">
-        <Image alt="minfi logo" maxHeight="40px" objectFit="cover" src={logo} />
-        <Box>
-          <Heading fontSize="4xl" className="gradient-text">
-            minfi
-          </Heading>
-        </Box>
+      <Flex maxW="1200px" mx="auto" align="center" justify="space-between">
+        <Link as={RouterLink} to="/" fontWeight="bold" display="flex" alignItems="center" gap={2}>
+          <FaHome />
+          Michael Rabellino
+        </Link>
+        <HStack spacing={4}>
+          <Button as={RouterLink} to="/about" variant="ghost">
+            About
+          </Button>
+          <Button as={RouterLink} to="/resume" variant="ghost">
+            Resume
+          </Button>
+          <Button as={RouterLink} to="/minfi" variant="ghost">
+            Minfi
+          </Button>
+          <IconButton
+            icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+            onClick={toggleColorMode}
+            variant="ghost"
+            aria-label="Toggle color mode"
+          />
+        </HStack>
       </Flex>
-    </Flex>
+    </Box>
   );
-}
+};
 
 export default TopNav;
