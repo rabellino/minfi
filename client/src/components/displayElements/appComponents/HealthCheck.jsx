@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Flex, Button, Text } from '@chakra-ui/react';
 
 // HealthCheck is an application component containing a single button that when
 // clicked will invoke the backend endpoint: /api/health via HTTP
@@ -16,10 +17,18 @@ const HealthCheck = () => {
   };
 
   return (
-    <div>
-      <button onClick={checkHealth}>Check API Health</button>
-      <p>{status}</p>
-    </div>
+    <Flex flexDir="column" alignItems="center" gap="1rem">
+      <Button 
+        onClick={checkHealth}
+        colorScheme="blue"
+        _hover={{ background: "blue.600" }}
+        _active={{ background: "blue.700" }}
+      >
+        Check API Health
+      </Button>
+      
+      <Text>{status}</Text>
+    </Flex>
   );
 };
 
